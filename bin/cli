@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+
+const { readFileSync } = require('fs');
+
+const packageJson = readFileSync(`${__dirname}/../package.json`);
+let version = '';
+try {
+    version = JSON.parse(packageJson).version;
+} catch (error) {
+    console.warn(`Couldn't resolve package.json relative to ${__dirname}... skipping`);
+}
+
+process.env.FACTORIO_RCON_VERSION = version;
+
+require('../dist/cli');
