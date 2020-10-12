@@ -72,7 +72,6 @@ const parseArgs = (args: string[]) => {
 
         command.action(() => {
             program.selectedAction = name;
-            console.log(`doing the thing for "${name}"`);
         });
     });
 
@@ -82,17 +81,18 @@ const parseArgs = (args: string[]) => {
 const main = async () => {
     const program = parseArgs(process.argv);
 
-    const { host, port, timeout, password, args } = program;
+    const { host, port, timeout, password } = program;
+    const args = program.args.slice(1);
 
     const rcon = new FactorioRcon({ host, port, timeout, password });
 
     const rconCommand = program.selectedAction as RconCommand;
 
-    const result = await rcon.connect().then(() => {
-        console.log(`EXECUTE ${rconCommand}`);
-        const fn = rcon[rconCommand];
-        return fn.call<FactorioRcon, any[], Promise<any>>(rcon, ...args);
-    });
+    await rcon.connect();
+
+    console.log(`EXECUTE ${rconCommand} ${args.join(' ')}`);
+    const fn = rcon[rconCommand];
+    const result = await fn.call<FactorioRcon, any[], Promise<any>>(rcon, ...args);
 
     console.log(result);
 };
@@ -102,6 +102,6 @@ main()
         process.exit(0);
     })
     .catch((err) => {
-        console.error(`Exiting on uncaught error:`, err);
+        console.error(`Exiting on uncaught error:`, err.message);
         process.exit(err.exitCode || 1);
     });

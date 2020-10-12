@@ -1,6 +1,7 @@
 import { Rcon, RconOptions } from 'rcon-client';
 import * as validators from './validation';
 import * as parsers from './parser';
+import { PlayerEntry } from './types';
 
 export const Defaults = {
     HOST: 'localhost',
@@ -59,7 +60,29 @@ export class FactorioRcon extends Rcon {
         return this.send('/seed');
     }
 
+    /** Returns server elapsed time as a duration string such as "10 seconds" */
     time(): Promise<string> {
+        // todo parse and return as a numeric duration
         return this.send('/time').then((v) => new parsers.StringParser(v).trim().value());
+    }
+
+    /**
+     * Get player list.
+     *
+     * sample:
+     *
+     * ```
+     * Players (1):
+     *   Dicez (online)
+     *   Dimez
+     * ```
+     */
+    players(): Promise<PlayerEntry[]> {
+        return this.send('/players').then((str) =>
+            str
+                .split('\n')
+                .slice(1) // first string contains player count
+                .filter(Boolean)
+        );
     }
 }
