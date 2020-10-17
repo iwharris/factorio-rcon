@@ -78,6 +78,14 @@ const parseArgs = (args: string[]) => {
     return program.parse(args);
 };
 
+const printResult = (result: any) => {
+    if (['string', 'number'].includes(typeof result)) {
+        console.log(result);
+    } else {
+        console.log(JSON.stringify(result, null, 2));
+    }
+};
+
 const main = async () => {
     const program = parseArgs(process.argv);
 
@@ -94,7 +102,7 @@ const main = async () => {
     const fn = rcon[rconCommand];
     const result = await fn.call<FactorioRcon, any[], Promise<any>>(rcon, ...args);
 
-    console.log(result);
+    printResult(result);
 };
 
 main()
