@@ -78,10 +78,22 @@ export class FactorioRcon extends Rcon {
      * ```
      */
     players(): Promise<PlayerEntry[]> {
+        const regex = /^\s*(\w+)\s*(\(?online\))?/;
+
         return this.send('/players').then((str) =>
             str
                 .split('\n')
                 .slice(1) // first string contains player count
+                .map((line) => regex.exec(line))
+                .filter(Boolean)
+                .map((result) => {
+                    const [name, online] = (result as RegExpExecArray).slice(1);
+
+                    return {
+                        name,
+                        online: !!online,
+                    };
+                })
                 .filter(Boolean)
         );
     }
