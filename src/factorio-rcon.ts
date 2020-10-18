@@ -38,8 +38,9 @@ export class FactorioRcon extends Rcon {
      * Send a command or chat message to the server without any modification of the request and response.
      * Commands must be prefixed with a slash (eg. /time) or else they will be sent as a chat message.
      */
-    raw(command: string): Promise<string> {
-        return this.send(command);
+    async raw<T = string>(command: string): Promise<T> {
+        const result = await this.send(command);
+        return (result.trim() as unknown) as T;
     }
 
     help(): Promise<string> {

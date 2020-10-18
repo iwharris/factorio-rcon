@@ -80,7 +80,7 @@ const parseArgs = (args: string[]) => {
 
 const printResult = (result: any) => {
     if (['string', 'number'].includes(typeof result)) {
-        console.log(result);
+        console.log(`${result}`);
     } else {
         console.log(JSON.stringify(result, null, 2));
     }
