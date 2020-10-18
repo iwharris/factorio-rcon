@@ -52,6 +52,10 @@ export class FactorioRcon extends Rcon {
         return this.raw(`/save ${name}`);
     }
 
+    quit(): Promise<void> {
+        return this.raw<void>(`/quit`);
+    }
+
     promote(name: string): Promise<string> {
         validators.validateUsername(name);
         return this.send(`/promote ${name}`);
