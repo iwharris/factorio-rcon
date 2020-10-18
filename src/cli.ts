@@ -98,7 +98,7 @@ const main = async () => {
 
     await rcon.connect();
 
-    console.log(`EXECUTE ${rconCommand} ${args.join(' ')}`);
+    // console.log(`EXECUTE ${rconCommand} ${args.join(' ')}`);
     const fn = rcon[rconCommand];
     const result = await fn.call<FactorioRcon, any[], Promise<any>>(rcon, ...args);
 
