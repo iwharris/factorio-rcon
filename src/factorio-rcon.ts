@@ -48,8 +48,8 @@ export class FactorioRcon extends Rcon {
     }
 
     save(name: string): Promise<string> {
-        validators.validateUsername(name);
-        return this.send(`/save ${name}`);
+        if (!name) throw new Error(`Must provide a name for the savegame`);
+        return this.raw(`/save ${name}`);
     }
 
     promote(name: string): Promise<string> {
