@@ -44,7 +44,7 @@ export class FactorioRcon extends Rcon {
     }
 
     help(): Promise<string> {
-        return this.send('/help');
+        return this.raw('/help');
     }
 
     save(name: string): Promise<string> {
@@ -58,34 +58,26 @@ export class FactorioRcon extends Rcon {
 
     promote(name: string): Promise<string> {
         validators.validateUsername(name);
-        return this.send(`/promote ${name}`);
+        return this.raw(`/promote ${name}`);
     }
 
     seed(): Promise<string> {
-        return this.send('/seed');
+        return this.raw('/seed');
     }
 
     /** Returns server elapsed time as a duration string such as "10 seconds" */
     time(): Promise<string> {
         // todo parse and return as a numeric duration
-        return this.send('/time').then((v) => new parsers.StringParser(v).trim().value());
+        return this.raw('/time').then((v) => new parsers.StringParser(v).trim().value());
     }
 
     /**
-     * Get player list.
-     *
-     * sample:
-     *
-     * ```
-     * Players (1):
-     *   Dicez (online)
-     *   Dimez
-     * ```
+     * Get the list of players and their status (online/offline).
      */
     players(): Promise<PlayerEntry[]> {
         const regex = /^\s*(\w+)\s*(\(?online\))?/;
 
-        return this.send('/players').then((str) =>
+        return this.raw('/players').then((str) =>
             str
                 .split('\n')
                 .slice(1) // first string contains player count
